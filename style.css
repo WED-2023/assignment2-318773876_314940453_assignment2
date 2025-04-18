@@ -243,7 +243,6 @@ body {
     top: 0;
     left: 0;
     background: rgba(0, 0, 0, 0.5); /* חצי שקוף */
-    display: flex;
     justify-content: center;
     align-items: center;
     font-family: "Tahoma", sans-serif;
