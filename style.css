@@ -1,0 +1,309 @@
+.screen {
+    display: none;
+}
+  
+.screen.active {
+    display: block;
+}
+
+body {
+    min-width: 1366px;
+    min-height: 768px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Gisha', sans-serif;
+    background-image: url("background.jpg");
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+  }
+  
+  .glow-title {
+    font-size: 48px;
+    color: #d4d5ec;
+    text-shadow: 0 0 5px #7b7fff, 0 0 15px #6a6ae0, 0 0 30px #4b4ba5;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    margin: 20px auto;
+  }
+  
+  .logo-container {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    margin: 20px auto;
+  }
+  
+  .logo-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid #f2f5f6;
+    box-shadow: 0 0 20px #f3f9fa;
+  }
+  
+  .welcome-buttons {
+    margin-top: 30px;
+    margin: 20px auto;
+  }
+  
+  .welcome-buttons button {
+    font-family: Gisha, sans-serif;
+    padding: 12px 25px;
+    margin: 10px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: 2px solid #d4d5ec;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+    margin: 10px 15px;
+  }
+  
+  .welcome-buttons button:hover {
+    background-color: #dfafe6;
+    color: black;
+  }
+  
+  .id-info {
+    margin-top: 20px;
+    font-size: 18px;
+    font-family: Gisha, sans-serif;
+    color: white;
+    text-shadow: 0 0 6px #000;
+    margin-bottom: 30px;
+  }
+
+  #welcome {
+    height: 100vh;
+    text-align: center;
+    padding-top: 40px;   
+    padding-bottom: 40px; 
+    box-sizing: border-box;
+  }
+
+  #login {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1); /* שקיפות עדינה */
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    gap: 15px;
+  }
+  
+  .login-form input {
+    width: 250px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: Tahoma, sans-serif;
+    background-color: #ffffffcc;
+    text-align: center;
+  }
+  
+  .login-buttons {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .login-buttons button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .login-buttons button:hover {
+    background-color: #444;
+  }
+
+  #register {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  }
+  
+  .signup-form input,
+  .signup-form select {
+    width: 250px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: Tahoma, sans-serif;
+    background-color: #ffffffcc;
+    text-align: center;
+  }
+  
+  .birthdate {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-family: Tahoma, sans-serif;
+    color: white;
+  }
+  
+  .birthdate label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .register-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+  }
+  
+  .register-buttons button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .register-buttons button:hover {
+    background-color: #444;
+  }
+
+  .about-dialog {
+    border: none;
+    border-radius: 20px;
+    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #000;
+    font-family: Tahoma, sans-serif;
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+  }
+  
+  .about-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);  /* שקיפות מאחורי הדיאלוג */
+  }
+  
+  .about-dialog h2 {
+    margin-top: 0;
+  }
+  
+  .about-dialog .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  /* קונפיגורציה - כמו sign up */
+#configuration {
+    display: none;
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5); /* חצי שקוף */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Tahoma", sans-serif;
+    color: white;
+    z-index: 10;
+  }
+  
+  .config-box {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 30px 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 400px;
+    max-width: 90%;
+    text-align: center;
+  }
+  
+  .config-box h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #ffffff;
+    text-shadow: 0 0 5px #aaafff;
+  }
+  
+  .config-box label {
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  
+  .config-box input,
+  .config-box select {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+    width: 100%;
+    background-color: #f5f5f5;
+    color: #333;
+  }
+  
+  .config-box button {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .config-box button:hover {
+    background-color: #444;
+  }
+  
+
+
+  
