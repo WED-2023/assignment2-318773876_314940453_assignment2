@@ -1,18 +1,11 @@
-// function showScreen(screenId) {
-//     const screens = document.querySelectorAll(".screen");
-//     screens.forEach(screen => {
-//       screen.style.display = "none";
-//     });
-  
-//     document.getElementById(screenId).style.display = "block";
-// } 
-
 function showScreen(screenId) {
-    document.querySelectorAll('.screen').forEach(screen => {
-      screen.classList.remove('active');
+    const screens = document.querySelectorAll(".screen");
+    screens.forEach(screen => {
+      screen.style.display = "none";
     });
-    document.getElementById(screenId).classList.add('active');
-  }
+  
+    document.getElementById(screenId).style.display = "block";
+} 
 
 function registerUser() {
     const username = document.getElementById("reg-username").value.trim();
@@ -146,11 +139,10 @@ function login() {
   
     // תנאים לבדיקה
     if (
-      (username === "testuser") || // משתמש הדגמה שלא דורש הרשמה
+      (username === "testuser") || 
       (username === storedUser && password === storedPass)
     ) {
-      alert("Login successful!");
-      showScreen("configuration"); // או "game" אם את רוצה לעבור ישר למשחק
+      showScreen("configuration"); 
     } else {
        document.getElementById("login-error").innerText = "Incorrect username or password. Please try again.";
     }

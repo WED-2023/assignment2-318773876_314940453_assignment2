@@ -3,7 +3,11 @@
 }
   
 .screen.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
 }
 
 body {
@@ -88,7 +92,6 @@ body {
 
   #login {
     height: 100vh;
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -138,7 +141,6 @@ body {
 
   #register {
     height: 100vh;
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -234,21 +236,12 @@ body {
     cursor: pointer;
   }
 
-  /* קונפיגורציה - כמו sign up */
 #configuration {
-    display: none;
-    height: 100vh;
-    width: 100vw;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.5); /* חצי שקוף */
-    justify-content: center;
-    align-items: center;
+    background: rgba(0, 0, 0, 0.5); 
     font-family: "Tahoma", sans-serif;
     color: white;
     z-index: 10;
-  }
+}
   
   .config-box {
     background-color: rgba(255, 255, 255, 0.1);
