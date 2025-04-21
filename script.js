@@ -158,24 +158,169 @@ function login() {
     if (dialog.open) dialog.close();
   }
       
-      function startGame() {
+    function startGame() {
         const fireKey = document.getElementById("fire-key").value;
         const duration = document.getElementById("game-duration").value;
         const theme = document.getElementById("theme-select").value;
-      
+
         if (!fireKey) {
-          alert("Please select a fire key.");
-          return;
+            alert("Please select a fire key.");
+            return;
         }
+        
+        showScreen("game");
+
+        const player = document.getElementById("player");
+        const container = document.getElementById("game-container");
+
+        const containerWidth = container.offsetWidth;
+        const containerHeight = container.offsetHeight;
+
+        const playerWidth = player.offsetWidth;
+        const playerHeight = player.offsetHeight;
+
+        // מיקום התחלתי קבוע – באמצע למטה בתוך ה-canvas
+        const startX = (containerWidth - playerWidth) / 2;
+        const startY = containerHeight - playerHeight - 5; // טיפה מעל התחתית
+
+        player.style.left = `${startX}px`;
+        player.style.top = `${startY}px`;
+
+        // איפוס מערך האויבים
+        enemies.length = 0;
+
+        for (let row = 0; row < enemyRows; row++) {
+            for (let col = 0; col < enemyCols; col++) {
+                const x = enemyOffsetLeft + col * (enemyWidth + enemyPadding);
+                const y = enemyOffsetTop + row * (enemyHeight + enemyPadding);
+                const img = enemyImages[row]; 
+                enemies.push({ x, y, img});
+            }
+        }
+
+        let imagesLoaded = 0;
+        enemyImages.forEach(img => {
+        if (img.complete) {
+            imagesLoaded++;
+        } else {
+            img.onload = () => {
+                imagesLoaded++;
+                if (imagesLoaded === enemyImages.length) {
+                    gameLoop();
+                }
+            };
+        }
+});
+
+if (imagesLoaded === enemyImages.length) {
+    gameLoop();
+}
+
+    }
+
+    document.addEventListener("keydown", (event) => {
+        const player = document.getElementById("player");
+        const canvas = document.getElementById("gameCanvas");
+    
+        if (!player || !canvas) return;
+    
+        const step = 10; // כמה פיקסלים לזוז בכל לחיצה
+        const playerRect = player.getBoundingClientRect();
+        const canvasRect = canvas.getBoundingClientRect();
+    
+        let top = player.offsetTop;
+        let left = player.offsetLeft;
+    
+        switch (event.key) {
+            case "ArrowLeft":
+                if (left - step >= 0) left -= step;
+                break;
+            case "ArrowRight":
+                if (left + step + player.offsetWidth <= canvas.width) left += step;
+                break;
+            case "ArrowUp":
+                if (top - step >= canvas.height * 0.6) top -= step;  // עד 60% מגובה ה-canvas
+                break;
+            case "ArrowDown":
+                if (top + step + player.offsetHeight <= canvas.height) top += step;
+                break;
+        }
+    
+        player.style.left = `${left}px`;
+        player.style.top = `${top}px`;
+    });
+    
       
-        // כאן אפשר לשמור את ההגדרות ב-localStorage או להעביר למסך הבא
-        console.log("Fire Key:", fireKey);
-        console.log("Duration:", duration);
-        console.log("Theme:", theme);
+
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    
+    const enemyRows = 4;
+    const enemyCols = 5;
+    const enemyWidth = 40;
+    const enemyHeight = 40;
+    const enemyPadding = 20;
+    const enemyOffsetTop = 30;
+    const enemyOffsetLeft = 30;
+    
+    let enemyDirection = 1; // 1 = right, -1 = left
+    let enemySpeed = 1;
+    
+    const enemies = [];
+
+    const enemyImages = [
+        new Image(),
+        new Image(),
+        new Image(),
+        new Image()
+      ];
       
-        showScreen("game"); // או מסך אחר שמגיע אחרי קונפיגורציה
-      }
+      enemyImages[0].src = "images/bad.png"; // תמונה לשורה הראשונה
+      enemyImages[1].src = "images/bad2.png"; // לשורה השנייה
+      enemyImages[2].src = "images/bad3.png"; // לשורה השלישית
+      enemyImages[3].src = "images/bad4.png"; // לשורה הרביעית
       
+
+    function drawEnemies() {
+        enemies.forEach(enemy => {
+            if (enemy.img.complete) {
+                ctx.drawImage(enemy.img, enemy.x, enemy.y, enemyWidth, enemyHeight);
+            } else {
+                ctx.fillStyle = "red";
+                ctx.fillRect(enemy.x, enemy.y, enemyWidth, enemyHeight);
+            }
+        });
+    }
+      
+    function updateEnemies() {
+    // בודק אם אחד מהאויבים הגיע לגבול
+        let reachedEdge = false;
+        
+        enemies.forEach(enemy => {
+            enemy.x += enemySpeed * enemyDirection;
+            if (enemy.x + enemyWidth > canvas.width || enemy.x < 0) {
+            reachedEdge = true;
+            }
+        });
+        
+        // אם אחד מהם הגיע לקצה – שנה כיוון
+        if (reachedEdge) {
+            enemyDirection *= -1;
+        }
+    }
+
+    function gameLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+        drawEnemies();
+        updateEnemies();
+      
+        requestAnimationFrame(gameLoop);
+    }
+      
+
+      
+    
 
   
  

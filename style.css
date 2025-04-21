@@ -19,7 +19,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Gisha', sans-serif;
-    background-image: url("background.jpg");
+    background-image: url("images/background.jpg");
     background-size: cover;
     background-position: center;
     color: white;
@@ -40,6 +40,21 @@ body {
     margin-bottom: 40px;
     margin: 20px auto;
   }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 15px #ffffff88;
+    }
+    50% {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px #ffffffcc;
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 15px #ffffff88;
+    }
+  }
   
   .logo-image {
     width: 150px;
@@ -47,6 +62,7 @@ body {
     border-radius: 50%;
     border: 4px solid #f2f5f6;
     box-shadow: 0 0 20px #f3f9fa;
+    animation: pulse 2s infinite ease-in-out;
   }
   
   .welcome-buttons {
@@ -57,15 +73,16 @@ body {
   .welcome-buttons button {
     font-family: Gisha, sans-serif;
     padding: 12px 25px;
-    margin: 10px;
+    margin: 10px 15px;
     font-size: 18px;
     border-radius: 10px;
     border: 2px solid #d4d5ec;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.4);
     color: white;
     cursor: pointer;
     transition: 0.3s;
-    margin: 10px 15px;
+    margin: 5px 10px;
+    backdrop-filter: blur(4px);
   }
   
   .welcome-buttons button:hover {
@@ -74,12 +91,12 @@ body {
   }
   
   .id-info {
-    margin-top: 20px;
+    margin-top: 5px;
     font-size: 18px;
     font-family: Gisha, sans-serif;
     color: white;
     text-shadow: 0 0 6px #000;
-    margin-bottom: 30px;
+    margin-bottom: 5px;
   }
 
   #welcome {
@@ -101,7 +118,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.1); /* שקיפות עדינה */
+    background-color: rgba(255, 255, 255, 0.1);
     padding: 30px;
     border-radius: 20px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
@@ -236,6 +253,32 @@ body {
     cursor: pointer;
   }
 
+  .external-link {
+    margin-top: 20px;
+  }
+  
+  .external-link a {
+    display: inline-block;
+    font-family: Gisha, sans-serif;
+    padding: 12px 25px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: 2px solid #d4d5ec;
+    background-color: rgba(0, 0, 0, 0.4);;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.3s;
+    backdrop-filter: blur(4px);
+    width: 300px;
+    text-align: center;
+  }
+  
+  .external-link a:hover {
+    background-color: #dfafe6;
+    color: black;
+  }
+  
 #configuration {
     background: rgba(0, 0, 0, 0.5); 
     font-family: "Tahoma", sans-serif;
@@ -295,6 +338,92 @@ body {
   .config-box button:hover {
     background-color: #444;
   }
+
+  .shooting-star {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100px;
+    background: linear-gradient(to bottom, white, transparent);
+    opacity: 0.8;
+    transform: rotate(45deg);
+    animation: shooting 3s linear infinite;
+    z-index: 0;
+  }
+
+  .shooting-star {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100px;
+    background: linear-gradient(-45deg, white, transparent);
+    opacity: 0.8;
+    transform: rotate(45deg);
+    animation: shooting 3s linear infinite;
+    z-index: 0;
+  }
+  
+  .shooting-star.delay-1 {
+    animation-delay: 1s;
+    top: 10%;
+    left: 80%;
+  }
+  
+  .shooting-star.delay-2 {
+    animation-delay: 2s;
+    top: 30%;
+    left: 60%;
+  }
+  
+  @keyframes shooting {
+    0% {
+      transform: translateX(0) translateY(0) rotate(45deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(-500px) translateY(500px) rotate(45deg);
+      opacity: 0;
+    }
+  }
+
+  #game-container {
+    position: relative;
+    width: 700px;
+    height: 500px;
+  }
+
+  #gameCanvas {
+    background-color: rgba(0, 0, 0, 0.6);
+    display: block;
+    border: 2px solid white;
+    border-radius: 10px;
+  }
+
+  #game {
+    position: relative; 
+    width: 700px;       
+    height: 500px;       /* אותו גובה כמו ה-canvas */
+    margin: 0 auto;
+    background-color: transparent;
+  }
+  
+  .player-ship {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-image: url("images/good.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 2;
+  }
+  
+  
+  
+  
+  
+  
   
 
 

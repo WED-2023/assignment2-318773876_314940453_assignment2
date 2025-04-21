@@ -6,12 +6,15 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
+    <div class="shooting-star"></div>
+    <div class="shooting-star delay-1"></div>
+    <div class="shooting-star delay-2"></div>
+    
   <!-- Welcome -->
   <div id="welcome" class="screen active">
 
     <div class="logo-container">
-        <img src="logo.jpg" alt="Logo" class="logo-image">
+        <img src="images/logo.jpg" alt="Logo" class="logo-image">
     </div>
 
     <h1 class="glow-title">Welcome to Spaceships Game</h1>
@@ -26,6 +29,11 @@
         <button onclick="showScreen('register')">Sign Up</button>
         <button onclick="openAbout()">About</button>
     </div>
+
+    <div class="external-link">
+        <a href="https://wed-2023.github.io/assignment2-318773876_314940453_assignment2/" target="_blank">Link To Our Website🔗</a>
+    </div>
+      
   </div>
 
   <!-- Registration -->
@@ -78,9 +86,6 @@
       <p id="login-error" class="error-message"></p>
     </form>
   </div>
-  
-
-  <script src="script.js"></script>
 
 
   <dialog id="aboutDialog" class="about-dialog">
@@ -127,10 +132,17 @@
     </div>
   </div>
   
+
+<!-- Game Screen -->
+<div id="game" class="screen">
+    <div id="game-container">
+      <canvas id="gameCanvas" width="700" height="500"></canvas>
+      <div id="player" class="player-ship"></div>
+    </div>
+</div>
   
   
-
-
-
+  
+<script src="script.js"></script>
 </body>
 </html>
