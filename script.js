@@ -169,6 +169,8 @@ function login() {
         }
         
         showScreen("game");
+        document.getElementById("scoreboard").style.display = "block";
+
 
         const player = document.getElementById("player");
         const container = document.getElementById("game-container");
@@ -210,11 +212,13 @@ function login() {
                 }
             };
         }
-});
+        });
 
-if (imagesLoaded === enemyImages.length) {
-    gameLoop();
-}
+        if (imagesLoaded === enemyImages.length) {
+            gameLoop();
+        }
+
+
 
     }
 
@@ -314,16 +318,168 @@ if (imagesLoaded === enemyImages.length) {
       
         drawEnemies();
         updateEnemies();
-      
+
+        fireEnemyBullet();
+        updateEnemyBullets();
+        drawEnemyBullets();
+        checkEnemyBulletCollisionWithPlayer();
+
+        updatePlayerBullets();
+        drawPlayerBullets();
+        checkPlayerBulletCollision();
+
+        if (enemies.length === 0) {
+            alert("You win!");
+            location.reload();
+        }
+
         requestAnimationFrame(gameLoop);
     }
-      
 
-      
+    const enemyBullets = [];
+    const enemyBulletSpeed = 4;
+    const fireThresholdY = canvas.height * 0.75;  // שלב הירי הבא - אחרי שעבר 3/4 מהמסך
+    let lastBulletFired = null;
+
+    function fireEnemyBullet() {
+        // בדוק אם כבר יש כדור שלא עבר 3/4 מהמסך
+        if (lastBulletFired && lastBulletFired.y < fireThresholdY) return;
+    
+        // בחר חללית רנדומלית
+        const shootingEnemies = enemies.filter(e => e); // כל האויבים הקיימים
+        if (shootingEnemies.length === 0) return;
+    
+        const randomIndex = Math.floor(Math.random() * shootingEnemies.length);
+        const shooter = shootingEnemies[randomIndex];
+    
+        const bullet = {
+            x: shooter.x + enemyWidth / 2 - 2,
+            y: shooter.y + enemyHeight,
+            width: 4,
+            height: 10,
+        };
+    
+        enemyBullets.push(bullet);
+        lastBulletFired = bullet;
+    }
+
+    function updateEnemyBullets() {
+        enemyBullets.forEach(bullet => {
+            bullet.y += enemyBulletSpeed;
+        });
+    
+        // הסרה של כדורים שיצאו מהמסך
+        while (enemyBullets.length > 0 && enemyBullets[0].y > canvas.height) {
+            enemyBullets.shift();
+        }
+    }
+
+    function drawEnemyBullets() {
+        ctx.fillStyle = "red";
+        enemyBullets.forEach(bullet => {
+            ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+        });
+    }
+
+    function checkEnemyBulletCollisionWithPlayer() {
+        const player = document.getElementById("player");
+        const playerRect = player.getBoundingClientRect();
+        const canvasRect = canvas.getBoundingClientRect();
+    
+        const playerX = player.offsetLeft;
+        const playerY = player.offsetTop;
+        const playerW = player.offsetWidth;
+        const playerH = player.offsetHeight;
+    
+        for (const bullet of enemyBullets) {
+            if (
+                bullet.x < playerX + playerW &&
+                bullet.x + bullet.width > playerX &&
+                bullet.y < playerY + playerH &&
+                bullet.y + bullet.height > playerY
+            ) {
+                lives--;
+                document.getElementById("lives").textContent = lives;
+                enemyBullets.splice(enemyBullets.indexOf(bullet), 1);
+    
+                if (lives === 0) {
+                    alert("Game Over!");
+                    location.reload();
+                }
+                return;
+            }
+        }
+    }
+
+    let playerBullets = [];
+    let playerBulletSpeed = 6;
+    let score = 0;
+    let lives = 3;
+    let speedIncreaseCount = 0;
+
+    document.addEventListener("keydown", (event) => {
+        const fireKey = document.getElementById("fire-key").value;
+        if (event.key.toUpperCase() === fireKey && playerBullets.length < 3) {
+            const player = document.getElementById("player");
+            const bullet = {
+                x: player.offsetLeft + player.offsetWidth / 2 - 2,
+                y: player.offsetTop,
+                width: 4,
+                height: 10
+            };
+            playerBullets.push(bullet);
+        }
+    });
+
+    function updatePlayerBullets() {
+        playerBullets.forEach(bullet => bullet.y -= playerBulletSpeed);
+        playerBullets = playerBullets.filter(b => b.y > 0);
+    }
+    
+    function drawPlayerBullets() {
+        ctx.fillStyle = "white";
+        playerBullets.forEach(b => ctx.fillRect(b.x, b.y, b.width, b.height));
+    }
+
+    function checkPlayerBulletCollision() {
+        for (let i = playerBullets.length - 1; i >= 0; i--) {
+            const bullet = playerBullets[i];
+            for (let j = enemies.length - 1; j >= 0; j--) {
+                const enemy = enemies[j];
+                if (
+                    bullet.x < enemy.x + enemyWidth &&
+                    bullet.x + bullet.width > enemy.x &&
+                    bullet.y < enemy.y + enemyHeight &&
+                    bullet.y + bullet.height > enemy.y
+                ) {
+                    // ניקוד לפי שורה
+                    const rowIndex = Math.floor((enemy.y - enemyOffsetTop) / (enemyHeight + enemyPadding));
+                    const points = (4 - rowIndex) * 5; // 4 -> 5pts, 3->10pts ...
+                    score += points;
+                    document.getElementById("score").textContent = score;
+    
+                    enemies.splice(j, 1);
+                    playerBullets.splice(i, 1);
+                    break;
+                }
+            }
+        }
+    }
+
+    setInterval(() => {
+        if (speedIncreaseCount < 4) {
+            enemySpeed += 0.5;
+            playerBulletSpeed += 0.5;
+            speedIncreaseCount++;
+        }
+    }, 5000);
     
 
-  
- 
 
-  
-  
+
+
+    
+    
+    
+
+

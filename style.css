@@ -418,13 +418,19 @@ body {
     background-repeat: no-repeat;
     z-index: 2;
   }
-  
-  
-  
-  
-  
-  
+
+  #scoreboard {
+    display: none;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    z-index: 5;
+    background-color: rgba(0,0,0,0.4);
+    padding: 5px 10px;
+    border-radius: 10px;
+  }
   
 
-
-  
