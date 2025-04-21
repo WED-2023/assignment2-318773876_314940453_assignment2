@@ -164,6 +164,11 @@ function login() {
   }
       
     function startGame() {
+        const music = document.getElementById("background-music");
+        music.currentTime = 0;
+        music.play();
+
+
         const fireKey = document.getElementById("fire-key").value;
         const duration = document.getElementById("game-duration").value;
         const theme = document.getElementById("theme-select").value;
@@ -235,6 +240,17 @@ function login() {
         }
 
     }
+
+    function endGame() {
+        const music = document.getElementById("background-music");
+        music.pause();
+    
+        alert("Game Over!");
+        location.reload();
+    }
+    
+
+
 
     document.addEventListener("keydown", (event) => {
         const player = document.getElementById("player");
@@ -344,8 +360,7 @@ function login() {
 
         if (enemies.length === 0) {
             alert("You win!");
-            location.reload();
-        }
+            endGame();}
 
         requestAnimationFrame(gameLoop);
     }
@@ -418,11 +433,12 @@ function login() {
     
                 if (lives === 0) {
                     alert("Game Over!");
-                    location.reload();
+                    endGame();
                 }
                 return;
             }
         }
+        document.getElementById("death-sound").play();
     }
 
     let playerBullets = [];
@@ -440,6 +456,7 @@ function login() {
         option.value = key === " " ? " " : key;
         option.text = key === " " ? "Space" : key;
         fireKeySelect.appendChild(option);  
+    });
     });
 
     function updatePlayerBullets() {
@@ -475,6 +492,7 @@ function login() {
                 }
             }
         }
+        document.getElementById("hit-sound").play();
     }
 
     setInterval(() => {
