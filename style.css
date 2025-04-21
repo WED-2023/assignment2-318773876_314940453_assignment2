@@ -1,13 +1,13 @@
 .screen {
     display: none;
-}
-  
-.screen.active {
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
+}
+  
+.screen.active {
+    display: flex;
 }
 
 body {
@@ -280,6 +280,12 @@ body {
   }
   
 #configuration {
+    /* flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); */
+
     background: rgba(0, 0, 0, 0.5); 
     font-family: "Tahoma", sans-serif;
     color: white;
@@ -298,6 +304,7 @@ body {
     width: 400px;
     max-width: 90%;
     text-align: center;
+    margin: auto;
   }
   
   .config-box h2 {
@@ -413,7 +420,6 @@ body {
     position: absolute;
     width: 50px;
     height: 50px;
-    background-image: url("images/good.png");
     background-size: contain;
     background-repeat: no-repeat;
     z-index: 2;

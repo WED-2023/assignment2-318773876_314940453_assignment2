@@ -1,10 +1,10 @@
 function showScreen(screenId) {
     const screens = document.querySelectorAll(".screen");
     screens.forEach(screen => {
-      screen.style.display = "none";
+        screen.classList.remove("active");
     });
   
-    document.getElementById(screenId).style.display = "block";
+    document.getElementById(screenId).classList.add("active");
 } 
 
 function registerUser() {
@@ -136,16 +136,21 @@ function login() {
     // קריאה למידע מהמערכת (localStorage)
     const storedUser = localStorage.getItem("user");
     const storedPass = localStorage.getItem("pass");
+
+    // משתמש קבוע
+    const fixedUser = "p";
+    const fixedPass = "testuser";
   
     // תנאים לבדיקה
     if (
-      (username === "testuser") || 
-      (username === storedUser && password === storedPass)
-    ) {
-      showScreen("configuration"); 
-    } else {
-       document.getElementById("login-error").innerText = "Incorrect username or password. Please try again.";
-    }
+        (username === storedUser && password === storedPass) ||
+        (username === fixedUser && password === fixedPass)
+      ) {
+        showScreen("configuration");
+      } else {
+        document.getElementById("login-error").innerText =
+          "Incorrect username or password. Please try again.";
+      }
   }
 
   function openAbout() {
@@ -167,12 +172,23 @@ function login() {
             alert("Please select a fire key.");
             return;
         }
-        
+
+        // שינוי תמונת החללית לפי צבע
+        const player = document.getElementById("player");
+
+        if (theme === "blue") {
+            player.style.backgroundImage = "url('images/blue.png')";
+        } else if (theme === "purple") {
+            player.style.backgroundImage = "url('images/purple.png')";
+        } else if (theme === "pink") {
+            player.style.backgroundImage = "url('images/pink.png')";
+        } else {
+            player.style.backgroundImage = "url('images/blue.png')";
+        }
+
         showScreen("game");
         document.getElementById("scoreboard").style.display = "block";
 
-
-        const player = document.getElementById("player");
         const container = document.getElementById("game-container");
 
         const containerWidth = container.offsetWidth;
@@ -217,8 +233,6 @@ function login() {
         if (imagesLoaded === enemyImages.length) {
             gameLoop();
         }
-
-
 
     }
 
@@ -418,17 +432,14 @@ function login() {
     let speedIncreaseCount = 0;
 
     document.addEventListener("keydown", (event) => {
-        const fireKey = document.getElementById("fire-key").value;
-        if (event.key.toUpperCase() === fireKey && playerBullets.length < 3) {
-            const player = document.getElementById("player");
-            const bullet = {
-                x: player.offsetLeft + player.offsetWidth / 2 - 2,
-                y: player.offsetTop,
-                width: 4,
-                height: 10
-            };
-            playerBullets.push(bullet);
-        }
+        const fireKey = document.getElementById("fire-key");
+        const letters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", " "];
+
+        letters.forEach(key => {
+        const option = document.createElement("option");
+        option.value = key === " " ? " " : key;
+        option.text = key === " " ? "Space" : key;
+        fireKeySelect.appendChild(option);  
     });
 
     function updatePlayerBullets() {
