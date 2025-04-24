@@ -2,10 +2,9 @@ let selectedFireKey = null;
 let speedIncreaseCount = 0;
 let enemySpeed = 2;
 let enemyBulletSpeed = 4;
-let gameDuration = 0;        // בדקות
-let timeRemaining = 0;       // בשניות
+let gameDuration = 0;        
+let timeRemaining = 0;       
 let timerInterval = null;
-
 let playerBullets = [];
 let playerBulletSpeed = 6;
 let score = 0;
@@ -94,7 +93,7 @@ function registerUser() {
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
       });
-      document.getElementById('welcome').classList.add('active');
+    document.getElementById('welcome').classList.add('active');
       
     const daySelect = document.getElementById("reg-day");
     const monthSelect = document.getElementById("reg-month");
@@ -125,21 +124,24 @@ function registerUser() {
       yearSelect.appendChild(option);
     }
 
-  const dialog = document.getElementById("aboutDialog");
-  if (dialog) {
-    dialog.addEventListener("click", (event) => {
-      const rect = dialog.getBoundingClientRect();
-      const clickedInDialog =
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top &&
-        event.clientY <= rect.bottom;
+    const dialog = document.getElementById("aboutDialog");
+    if (dialog) {
+        dialog.addEventListener("click", (event) => {
+        const rect = dialog.getBoundingClientRect();
+        const clickedInDialog =
+            event.clientX >= rect.left &&
+            event.clientX <= rect.right &&
+            event.clientY >= rect.top &&
+            event.clientY <= rect.bottom;
 
-      if (!clickedInDialog) {
-        dialog.close();
-      }
-    });
-    }
+        if (!clickedInDialog) {
+            dialog.close();
+        }
+        });
+        }
+
+    document.querySelector('#new-game-box button').addEventListener('click', startNewGame);
+
 });
 
   
@@ -202,7 +204,7 @@ function login() {
 
         // עדכון זמן המשחק לפי הבחירה
         gameDuration = parseInt(duration);
-        timeRemaining = gameDuration * 60; // שניות
+        timeRemaining = gameDuration * 60; 
         updateTimerDisplay();
 
         if (timerInterval) clearInterval(timerInterval);
@@ -241,9 +243,9 @@ function login() {
         const playerWidth = player.offsetWidth;
         const playerHeight = player.offsetHeight;
 
-        // מיקום התחלתי קבוע – באמצע למטה בתוך ה-canvas
+        // מיקום התחלתי קבוע
         const startX = (containerWidth - playerWidth) / 2;
-        const startY = containerHeight - playerHeight - 5; // טיפה מעל התחתית
+        const startY = containerHeight - playerHeight - 5;  
 
         player.style.left = `${startX}px`;
         player.style.top = `${startY}px`;
@@ -487,7 +489,7 @@ function login() {
                 document.getElementById("lives").textContent = lives;
                 enemyBullets.splice(enemyBullets.indexOf(bullet), 1);
     
-                 // ✨ איפוס מיקום החללית לנקודת ההתחלה:
+                 // איפוס מיקום החללית לנקודת ההתחלה:
                 const container = document.getElementById("game-container");
                 const containerWidth = container.offsetWidth;
                 const containerHeight = container.offsetHeight;
@@ -536,7 +538,7 @@ function login() {
                 ) {
                     // ניקוד לפי שורה
                     const rowIndex = Math.floor((enemy.y - enemyOffsetTop) / (enemyHeight + enemyPadding));
-                    const points = (4 - rowIndex) * 5; // 4 -> 5pts, 3->10pts ...
+                    const points = (4 - rowIndex) * 5; 
                     score += points;
                     document.getElementById("score").textContent = score;
     
@@ -558,10 +560,10 @@ function login() {
     }    
 
     document.addEventListener("keydown", (event) => {
-        // ✨ אם המשחק נגמר – אל תעשה כלום
+        // אם המשחק נגמר – אל תעשה כלום
         if (gameEnded) return;
     
-        // ✨ מניעת גלילה בחצים
+        // מניעת גלילה בחצים
         const keysToPrevent = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "];
         if (keysToPrevent.includes(event.key)) {
             event.preventDefault();
@@ -613,7 +615,7 @@ function login() {
         // ירי (רק אם יש fire key)
         const keyPressed = event.key === " " || event.code === "Space" ? " " : event.key.toUpperCase();
         if (selectedFireKey && keyPressed === selectedFireKey && !fireInterval) {
-            fireBullet(); // ירי מיידי
+            fireBullet(); 
             fireInterval = setInterval(() => {
                 fireBullet();
             }, 250);
@@ -668,7 +670,22 @@ function login() {
     }
 
     function startNewGame() {
-        
+        stopGame();
+        gameEnded = false;
+        score = 0;
+        document.getElementById("score").textContent = 0;
+        lives = 3;
+        document.getElementById("lives").textContent = 3;
+
+        const messageBox = document.getElementById("end-message");
+        messageBox.style.display = "none";
+        messageBox.innerHTML = "";
+
+        speedIncreaseCount = 0;
+        enemySpeed = 2;
+        enemyBulletSpeed = 4;
+     
+        startGame(true);
     }
     
 
@@ -689,6 +706,62 @@ function login() {
         history.sort((a, b) => b - a); // מיון יורד
         localStorage.setItem(`scoreHistory_${username}`, JSON.stringify(history));
     }
+    
+    function stopGame() {
+        clearInterval(timerInterval);  
+        gameEnded = true;  
+    }
+
+    // function resetGame() {
+    //     // איפוס משתנים
+    //     score = 0;
+    //     lives = 3;
+    //     timeRemaining = gameDuration * 60; 
+    //     speedIncreaseCount = 0;
+    //     enemySpeed = 2;
+    //     enemyBulletSpeed = 4;
+    //     playerBullets = [];
+    //     enemyBullets = [];
+      
+    //     // איפוס המיקום של החללית
+    //     resetPlayerPosition();
+    
+    //     // יצירת אויבים מחדש (לאפס את רשימת האויבים)
+    //     enemies.length = 0;
+    //     for (let row = 0; row < enemyRows; row++) {
+    //         for (let col = 0; col < enemyCols; col++) {
+    //             const x = enemyOffsetLeft + col * (enemyWidth + enemyPadding);
+    //             const y = enemyOffsetTop + row * (enemyHeight + enemyPadding);
+    //             const img = enemyImages[row]; 
+    //             enemies.push({ x, y, img});
+    //         }
+    //     }
+    
+    //     document.getElementById("score").textContent = 0;
+    //     document.getElementById("lives").textContent = 3;
+    //     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    //     // להתחיל את הלולאה מחדש אם יש צורך
+    //     gameLoop();
+    // }
+    
+    // function resetPlayerPosition() {
+    //     const player = document.getElementById("player");
+    //     const container = document.getElementById("game-container");
+    //     const containerWidth = container.offsetWidth;
+    //     const containerHeight = container.offsetHeight;
+    //     const playerWidth = player.offsetWidth;
+    //     const playerHeight = player.offsetHeight;
+    
+    //     // איפוס המיקום של החללית למרכז המסך (בתחתית)
+    //     const startX = (containerWidth - playerWidth) / 2;
+    //     const startY = containerHeight - playerHeight - 5;
+    
+    //     player.style.left = `${startX}px`;
+    //     player.style.top = `${startY}px`;
+    // }
+    
+    
     
 
 
