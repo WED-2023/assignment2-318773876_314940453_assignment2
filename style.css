@@ -438,5 +438,52 @@ body {
     padding: 5px 10px;
     border-radius: 10px;
   }
+
+  footer {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    font-family: Tahoma, sans-serif;
+    font-size: 14px;
+  }
+
+
+#end-message {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.85);
+  padding: 40px;
+  border: 4px solid white;
+  border-radius: 15px;
+  font-size: 32px;
+  color: white;
+  z-index: 9999;
+  text-align: center;
+  animation: popUp 0.5s ease-out;
+}
+
+@keyframes popUp {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+  
+
+  
+  
+  
   
 

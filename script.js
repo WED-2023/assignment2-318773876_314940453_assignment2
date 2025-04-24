@@ -1,3 +1,18 @@
+let selectedFireKey = null;
+let speedIncreaseCount = 0;
+let enemySpeed = 2;
+let enemyBulletSpeed = 4;
+let gameDuration = 0;        // בדקות
+let timeRemaining = 0;       // בשניות
+let timerInterval = null;
+
+let playerBullets = [];
+let playerBulletSpeed = 6;
+let score = 0;
+let lives = 3;
+let gameEnded = false;
+
+
 function showScreen(screenId) {
     const screens = document.querySelectorAll(".screen");
     screens.forEach(screen => {
@@ -63,6 +78,17 @@ function registerUser() {
 
   window.addEventListener("DOMContentLoaded", () => {
 
+    const fireKeySelect = document.getElementById("fire-key");
+    const letters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", " "];
+
+    letters.forEach(key => {
+        const option = document.createElement("option");
+        option.value = key === " " ? " " : key;
+        option.text = key === " " ? "Space" : key;
+        fireKeySelect.appendChild(option);  
+    });
+
+
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
       });
@@ -97,13 +123,13 @@ function registerUser() {
       yearSelect.appendChild(option);
     }
   
-    const fireInput = document.getElementById("fire-key");
-  if (fireInput) {
-    fireInput.addEventListener("keydown", (e) => {
-      e.preventDefault();
-      fireInput.value = e.key.toUpperCase();
-    });
-  }
+    // const fireInput = document.getElementById("fire-key");
+    // if (fireInput) {
+    // fireInput.addEventListener("keydown", (e) => {
+    //   e.preventDefault();
+    //   fireInput.value = e.key.toUpperCase();
+    // });
+    // }
 
   const dialog = document.getElementById("aboutDialog");
   if (dialog) {
@@ -120,12 +146,12 @@ function registerUser() {
       }
     });
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && dialog.open) {
-        dialog.close();
-      }
-    });
-  }
+    // document.addEventListener("keydown", (event) => {
+    //   if (event.key === "Escape" && dialog.open) {
+    //     dialog.close();
+    //   }
+    // });
+    }
 });
 
   
@@ -168,15 +194,30 @@ function login() {
         music.currentTime = 0;
         music.play();
 
-
-        const fireKey = document.getElementById("fire-key").value;
+        selectedFireKey = document.getElementById("fire-key").value;
         const duration = document.getElementById("game-duration").value;
         const theme = document.getElementById("theme-select").value;
 
-        if (!fireKey) {
+        if (!selectedFireKey) {
             alert("Please select a fire key.");
             return;
         }
+
+        // עדכון זמן המשחק לפי הבחירה
+        gameDuration = parseInt(duration);
+        timeRemaining = gameDuration * 60; // שניות
+        updateTimerDisplay();
+
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timeRemaining--;
+            updateTimerDisplay();
+
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                endGame("time");
+            }
+        }, 1000);
 
         // שינוי תמונת החללית לפי צבע
         const player = document.getElementById("player");
@@ -239,50 +280,85 @@ function login() {
             gameLoop();
         }
 
+        speedIncreaseCount = 0;
+        enemySpeed = 2;
+        enemyBulletSpeed = 4;
+
+        setInterval(() => {
+            if (speedIncreaseCount < 4) {
+                enemySpeed *= 1.5;
+                enemyBulletSpeed *= 1.3;
+                speedIncreaseCount++;
+            }
+        }, 5000);
+
     }
 
-    function endGame() {
+    function endGame(reason) {
+        gameEnded = true;  // עצור את הלולאה
+        clearInterval(timerInterval); 
         const music = document.getElementById("background-music");
         music.pause();
     
-        alert("Game Over!");
-        location.reload();
-    }
+        const messageBox = document.getElementById("end-message");
+        let message = "";
     
-
-
-
-    document.addEventListener("keydown", (event) => {
-        const player = document.getElementById("player");
-        const canvas = document.getElementById("gameCanvas");
-    
-        if (!player || !canvas) return;
-    
-        const step = 10; // כמה פיקסלים לזוז בכל לחיצה
-        const playerRect = player.getBoundingClientRect();
-        const canvasRect = canvas.getBoundingClientRect();
-    
-        let top = player.offsetTop;
-        let left = player.offsetLeft;
-    
-        switch (event.key) {
-            case "ArrowLeft":
-                if (left - step >= 0) left -= step;
-                break;
-            case "ArrowRight":
-                if (left + step + player.offsetWidth <= canvas.width) left += step;
-                break;
-            case "ArrowUp":
-                if (top - step >= canvas.height * 0.6) top -= step;  // עד 60% מגובה ה-canvas
-                break;
-            case "ArrowDown":
-                if (top + step + player.offsetHeight <= canvas.height) top += step;
-                break;
+        if (reason === "lost") {
+            message = "You Lost!";
+        } else if (reason === "time") {
+            if (score < 100) {
+                message = `You can do better. Score: ${score}`;
+            } else {
+                message = `Winner! Score: ${score}`;
+            }
+        } else if (reason === "allEnemiesDestroyed") {
+            message = "Champion!";
+        } else {
+            message = "Game Over!";
         }
     
-        player.style.left = `${left}px`;
-        player.style.top = `${top}px`;
-    });
+        messageBox.innerText = message;
+        messageBox.style.display = "block";
+    
+        setTimeout(() => {
+            location.reload();
+        }, 6000); 
+    }
+    
+    
+    
+
+    // document.addEventListener("keydown", (event) => {
+    //     const player = document.getElementById("player");
+    //     const canvas = document.getElementById("gameCanvas");
+    
+    //     if (!player || !canvas) return;
+    
+    //     const step = 10; // כמה פיקסלים לזוז בכל לחיצה
+    //     const playerRect = player.getBoundingClientRect();
+    //     const canvasRect = canvas.getBoundingClientRect();
+    
+    //     let top = player.offsetTop;
+    //     let left = player.offsetLeft;
+    
+    //     switch (event.key) {
+    //         case "ArrowLeft":
+    //             if (left - step >= 0) left -= step;
+    //             break;
+    //         case "ArrowRight":
+    //             if (left + step + player.offsetWidth <= canvas.width) left += step;
+    //             break;
+    //         case "ArrowUp":
+    //             if (top - step >= canvas.height * 0.6) top -= step;  // עד 60% מגובה ה-canvas
+    //             break;
+    //         case "ArrowDown":
+    //             if (top + step + player.offsetHeight <= canvas.height) top += step;
+    //             break;
+    //     }
+    
+    //     player.style.left = `${left}px`;
+    //     player.style.top = `${top}px`;
+    // });
     
       
 
@@ -298,7 +374,6 @@ function login() {
     const enemyOffsetLeft = 30;
     
     let enemyDirection = 1; // 1 = right, -1 = left
-    let enemySpeed = 1;
     
     const enemies = [];
 
@@ -333,17 +408,17 @@ function login() {
         enemies.forEach(enemy => {
             enemy.x += enemySpeed * enemyDirection;
             if (enemy.x + enemyWidth > canvas.width || enemy.x < 0) {
-            reachedEdge = true;
+                reachedEdge = true;
             }
         });
         
-        // אם אחד מהם הגיע לקצה – שנה כיוון
         if (reachedEdge) {
             enemyDirection *= -1;
         }
     }
 
     function gameLoop() {
+        if (gameEnded) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       
         drawEnemies();
@@ -359,14 +434,14 @@ function login() {
         checkPlayerBulletCollision();
 
         if (enemies.length === 0) {
-            alert("You win!");
-            endGame();}
+            endGame("allEnemiesDestroyed");
+            return;
+        }
 
         requestAnimationFrame(gameLoop);
     }
 
     const enemyBullets = [];
-    const enemyBulletSpeed = 4;
     const fireThresholdY = canvas.height * 0.75;  // שלב הירי הבא - אחרי שעבר 3/4 מהמסך
     let lastBulletFired = null;
 
@@ -412,8 +487,6 @@ function login() {
 
     function checkEnemyBulletCollisionWithPlayer() {
         const player = document.getElementById("player");
-        const playerRect = player.getBoundingClientRect();
-        const canvasRect = canvas.getBoundingClientRect();
     
         const playerX = player.offsetLeft;
         const playerY = player.offsetTop;
@@ -431,33 +504,33 @@ function login() {
                 document.getElementById("lives").textContent = lives;
                 enemyBullets.splice(enemyBullets.indexOf(bullet), 1);
     
+                 // ✨ איפוס מיקום החללית לנקודת ההתחלה:
+                const container = document.getElementById("game-container");
+                const containerWidth = container.offsetWidth;
+                const containerHeight = container.offsetHeight;
+                const playerWidth = player.offsetWidth;
+                const playerHeight = player.offsetHeight;
+
+                const startX = (containerWidth - playerWidth) / 2;
+                const startY = containerHeight - playerHeight - 5;
+
+                player.style.left = `${startX}px`;
+                player.style.top = `${startY}px`;
+
+                document.getElementById("death-sound").currentTime = 0;
+                document.getElementById("death-sound").play();
+
                 if (lives === 0) {
-                    alert("Game Over!");
-                    endGame();
+                    endGame("lost");
+                    return;
                 }
                 return;
             }
         }
-        document.getElementById("death-sound").play();
     }
 
-    let playerBullets = [];
-    let playerBulletSpeed = 6;
-    let score = 0;
-    let lives = 3;
-    let speedIncreaseCount = 0;
-
-    document.addEventListener("keydown", (event) => {
-        const fireKey = document.getElementById("fire-key");
-        const letters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", " "];
-
-        letters.forEach(key => {
-        const option = document.createElement("option");
-        option.value = key === " " ? " " : key;
-        option.text = key === " " ? "Space" : key;
-        fireKeySelect.appendChild(option);  
-    });
-    });
+    
+    
 
     function updatePlayerBullets() {
         playerBullets.forEach(bullet => bullet.y -= playerBulletSpeed);
@@ -488,20 +561,114 @@ function login() {
     
                     enemies.splice(j, 1);
                     playerBullets.splice(i, 1);
+                    document.getElementById("hit-sound").currentTime = 0;
+                    document.getElementById("hit-sound").play();
                     break;
                 }
             }
         }
-        document.getElementById("hit-sound").play();
     }
 
-    setInterval(() => {
-        if (speedIncreaseCount < 4) {
-            enemySpeed += 0.5;
-            playerBulletSpeed += 0.5;
-            speedIncreaseCount++;
+    
+
+
+    // document.addEventListener("keydown", (event) => {
+    //     if (!selectedFireKey) return;
+    
+    //     const keyPressed = event.key === " " || event.code === "Space" ? " " : event.key.toUpperCase();
+    
+    //     if (keyPressed === selectedFireKey && playerBullets.length < 3) {
+    //         const player = document.getElementById("player");
+    //         const bullet = {
+    //             x: player.offsetLeft + player.offsetWidth / 2 - 2,
+    //             y: player.offsetTop,
+    //             width: 4,
+    //             height: 10
+    //         };
+    //         playerBullets.push(bullet);
+    //     }
+    // });
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        const formatted = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+        document.getElementById("time-left").textContent = formatted;
+    }    
+
+    document.addEventListener("keydown", (event) => {
+        // ✨ אם המשחק נגמר – אל תעשה כלום
+        if (gameEnded) return;
+    
+        // ✨ מניעת גלילה בחצים
+        const keysToPrevent = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "];
+        if (keysToPrevent.includes(event.key)) {
+            event.preventDefault();
         }
-    }, 5000);
+    
+        // ✨ סגירת about
+        if (event.key === "Escape") {
+            closeAbout();
+            return;
+        }
+    
+        // ✨ אם נלחץ input של fire-key – נעדכן את הערך בו (למעלה)
+        const fireInput = document.getElementById("fire-key");
+        if (document.activeElement === fireInput) {
+            event.preventDefault();
+            fireInput.value = event.key.toUpperCase();
+            return;
+        }
+    
+        // ✨ תזוזת החללית
+        const player = document.getElementById("player");
+        const canvas = document.getElementById("gameCanvas");
+        if (!player || !canvas) return;
+    
+        const step = 10;
+        let top = player.offsetTop;
+        let left = player.offsetLeft;
+    
+        switch (event.key) {
+            case "ArrowLeft":
+                if (left - step >= 0) left -= step;
+                break;
+            case "ArrowRight":
+                if (left + step + player.offsetWidth <= canvas.width) left += step;
+                break;
+            case "ArrowUp":
+                if (top - step >= canvas.height * 0.6) top -= step;
+                break;
+            case "ArrowDown":
+                if (top + step + player.offsetHeight <= canvas.height) top += step;
+                break;
+        }
+    
+        player.style.left = `${left}px`;
+        player.style.top = `${top}px`;
+    
+        // ✨ ירי (רק אם יש fire key)
+        const keyPressed = event.key === " " || event.code === "Space" ? " " : event.key.toUpperCase();
+        if (selectedFireKey && keyPressed === selectedFireKey && playerBullets.length < 3) {
+            const bullet = {
+                x: player.offsetLeft + player.offsetWidth / 2 - 2,
+                y: player.offsetTop,
+                width: 4,
+                height: 10
+            };
+            playerBullets.push(bullet);
+    
+            const shootSound = document.getElementById("shoot-sound");
+            if (shootSound) {
+                shootSound.currentTime = 0;
+                shootSound.play();
+            }
+        }
+    });
+    
+    
+
+
     
 
 

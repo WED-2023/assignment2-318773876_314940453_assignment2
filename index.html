@@ -146,12 +146,32 @@
 <div id="scoreboard">
     <p>Score: <span id="score">0</span></p>
     <p>Lives: <span id="lives">3</span></p>
+    <p>Time Left: <span id="time-left">00:00</span></p>
 </div>
   
 <audio id="background-music" src="sounds/background.mp3" loop></audio>
 <audio id="hit-sound" src="sounds/hit.mp3"></audio>
 <audio id="death-sound" src="sounds/death.mp3"></audio>
 
+<footer>
+    <p>Spaceships Game | Created by Noa Ioshpe & Noa Revivo</p>
+    <p>Contact us: <a href="mailto:noa@gmail.com">noa@gmail.com</a></p>
+</footer>
+
+<div id="end-message" style="display:none; color:white; font-size:24px; text-align:center; margin-top:20px;"></div>
+
+<div id="end-message" style="
+  display: none;
+  color: white;
+  font-size: 24px;
+  text-align: center;
+  margin-top: 20px;
+  position: absolute;
+  top: 100px;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+"></div>
   
 <script src="script.js"></script>
 </body>
