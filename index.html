@@ -137,17 +137,26 @@
 
 <!-- Game Screen -->
 <div id="game" class="screen">
-    <div id="game-container">
-      <canvas id="gameCanvas" width="700" height="500"></canvas>
-      <div id="player" class="player-ship"></div>
+    <div id="game-wrapper" style="display: flex; justify-content: center; align-items: flex-start; gap: 20px;">
+      
+      <div id="scoreboard" class="info-panel">
+        <p>Score: <span id="score">0</span></p>
+        <p>Lives: <span id="lives">3</span></p>
+        <p>Time Left: <span id="time-left">00:00</span></p>
+      </div>
+  
+      <div id="game-container">
+        <canvas id="gameCanvas" width="700" height="500"></canvas>
+        <div id="player" class="player-ship"></div>
+      </div>
+  
+      <div id="new-game-box">
+        <button onclick="startNewGame()">New Game</button>
+      </div>
+  
     </div>
 </div>
-
-<div id="scoreboard">
-    <p>Score: <span id="score">0</span></p>
-    <p>Lives: <span id="lives">3</span></p>
-    <p>Time Left: <span id="time-left">00:00</span></p>
-</div>
+  
   
 <audio id="background-music" src="sounds/background.mp3" loop></audio>
 <audio id="hit-sound" src="sounds/hit.mp3"></audio>
@@ -158,20 +167,7 @@
     <p>Contact us: <a href="mailto:noa@gmail.com">noa@gmail.com</a></p>
 </footer>
 
-<div id="end-message" style="display:none; color:white; font-size:24px; text-align:center; margin-top:20px;"></div>
-
-<div id="end-message" style="
-  display: none;
-  color: white;
-  font-size: 24px;
-  text-align: center;
-  margin-top: 20px;
-  position: absolute;
-  top: 100px;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-"></div>
+<div id="end-message"></div>
   
 <script src="script.js"></script>
 </body>

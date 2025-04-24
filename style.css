@@ -426,17 +426,7 @@ body {
   }
 
   #scoreboard {
-    display: none;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    color: white;
-    font-weight: bold;
-    font-size: 16px;
-    z-index: 5;
-    background-color: rgba(0,0,0,0.4);
-    padding: 5px 10px;
-    border-radius: 10px;
+    position: static;
   }
 
   footer {
@@ -453,21 +443,71 @@ body {
 
 
 #end-message {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.85);
-  padding: 40px;
-  border: 4px solid white;
-  border-radius: 15px;
-  font-size: 32px;
-  color: white;
-  z-index: 9999;
-  text-align: center;
-  animation: popUp 0.5s ease-out;
+    display: none;
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8); /* רקע כהה עם שקיפות */
+    color: white;
+    font-size: 24px;
+    text-align: center;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    z-index: 9999;
 }
+
+#end-message h3 {
+    margin-bottom: 15px;
+    color: #00ffff;
+    font-size: 24px;
+  }
+  
+  #end-message ol {
+    list-style: decimal;
+    margin: 10px auto;
+    padding-left: 25px;
+    max-height: 200px;
+    overflow-y: auto;
+    text-align: left;
+  }
+  
+  #end-message li {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: #e0e0e0;
+  }
+  
+  #end-message li.current {
+    font-weight: bold;
+    color: #ffcc00;
+  }
+  
+  #end-message .score-info {
+    margin-top: 15px;
+    font-size: 20px;
+    color: #00ff99;
+  }
+
+  #end-message table {
+    border-collapse: collapse;
+    margin: 10px auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  #end-message th,
+  #end-message td {
+    border: 1px solid white;
+    padding: 8px 12px;
+    text-align: center;
+  }
+  
+  #end-message th {
+    background-color: #333;
+    color: white;
+  }
+
 
 @keyframes popUp {
   0% {
@@ -479,6 +519,54 @@ body {
     opacity: 1;
   }
 }
+
+#game-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px; /* רווח בין המשחק לכפתור */
+    margin-top: 20px;
+  }
+
+  #new-game-box {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 0 10px #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: fit-content;
+  }
+  
+  #new-game-box button {
+    background-color: transparent;
+    color: white;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  #new-game-box button:hover {
+    text-decoration: underline;
+  }
+
+  .info-panel {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 20px 30px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    height: fit-content;
+    min-width: 200px; 
+  }
+  
+  
 
   
 

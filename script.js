@@ -11,7 +11,9 @@ let playerBulletSpeed = 6;
 let score = 0;
 let lives = 3;
 let gameEnded = false;
-
+let keysPressed = {};
+let manualRestart = false;
+let fireInterval = null;
 
 function showScreen(screenId) {
     const screens = document.querySelectorAll(".screen");
@@ -122,14 +124,6 @@ function registerUser() {
       option.text = i;
       yearSelect.appendChild(option);
     }
-  
-    // const fireInput = document.getElementById("fire-key");
-    // if (fireInput) {
-    // fireInput.addEventListener("keydown", (e) => {
-    //   e.preventDefault();
-    //   fireInput.value = e.key.toUpperCase();
-    // });
-    // }
 
   const dialog = document.getElementById("aboutDialog");
   if (dialog) {
@@ -145,12 +139,6 @@ function registerUser() {
         dialog.close();
       }
     });
-
-    // document.addEventListener("keydown", (event) => {
-    //   if (event.key === "Escape" && dialog.open) {
-    //     dialog.close();
-    //   }
-    // });
     }
 });
 
@@ -163,6 +151,12 @@ function login() {
     const storedUser = localStorage.getItem("user");
     const storedPass = localStorage.getItem("pass");
 
+    const prevUser = localStorage.getItem("lastUser");
+    if (prevUser && prevUser !== username) {
+        localStorage.removeItem(`scoreHistory_${prevUser}`);
+    }
+    localStorage.setItem("lastUser", username);
+
     // משתמש קבוע
     const fixedUser = "p";
     const fixedPass = "testuser";
@@ -172,6 +166,7 @@ function login() {
         (username === storedUser && password === storedPass) ||
         (username === fixedUser && password === fixedPass)
       ) {
+        localStorage.setItem("currentUser", username); 
         showScreen("configuration");
       } else {
         document.getElementById("login-error").innerText =
@@ -189,7 +184,9 @@ function login() {
     if (dialog.open) dialog.close();
   }
       
-    function startGame() {
+    function startGame(skipHistory = false) {
+        manualRestart = skipHistory;
+
         const music = document.getElementById("background-music");
         music.currentTime = 0;
         music.play();
@@ -233,6 +230,7 @@ function login() {
         }
 
         showScreen("game");
+        document.getElementById("new-game-box").style.display = "block";
         document.getElementById("scoreboard").style.display = "block";
 
         const container = document.getElementById("game-container");
@@ -295,7 +293,7 @@ function login() {
     }
 
     function endGame(reason) {
-        gameEnded = true;  // עצור את הלולאה
+        gameEnded = true;  
         clearInterval(timerInterval); 
         const music = document.getElementById("background-music");
         music.pause();
@@ -317,50 +315,21 @@ function login() {
             message = "Game Over!";
         }
     
-        messageBox.innerText = message;
+        messageBox.innerHTML = `<p style="font-size: 24px; color: white;">${message}</p>`;
         messageBox.style.display = "block";
     
-        setTimeout(() => {
-            location.reload();
-        }, 6000); 
-    }
-    
-    
-    
+        if (!manualRestart) {
+            const currentUser = localStorage.getItem("currentUser");
+            saveScoreToHistory(currentUser, score);
+            showScoreHistory(currentUser);
+        }        
 
-    // document.addEventListener("keydown", (event) => {
-    //     const player = document.getElementById("player");
-    //     const canvas = document.getElementById("gameCanvas");
-    
-    //     if (!player || !canvas) return;
-    
-    //     const step = 10; // כמה פיקסלים לזוז בכל לחיצה
-    //     const playerRect = player.getBoundingClientRect();
-    //     const canvasRect = canvas.getBoundingClientRect();
-    
-    //     let top = player.offsetTop;
-    //     let left = player.offsetLeft;
-    
-    //     switch (event.key) {
-    //         case "ArrowLeft":
-    //             if (left - step >= 0) left -= step;
-    //             break;
-    //         case "ArrowRight":
-    //             if (left + step + player.offsetWidth <= canvas.width) left += step;
-    //             break;
-    //         case "ArrowUp":
-    //             if (top - step >= canvas.height * 0.6) top -= step;  // עד 60% מגובה ה-canvas
-    //             break;
-    //         case "ArrowDown":
-    //             if (top + step + player.offsetHeight <= canvas.height) top += step;
-    //             break;
-    //     }
-    
-    //     player.style.left = `${left}px`;
-    //     player.style.top = `${top}px`;
-    // });
-    
-      
+        if (!manualRestart) {
+            setTimeout(() => {
+                location.reload();
+            }, 6000);
+        }
+    }
 
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
@@ -420,7 +389,21 @@ function login() {
     function gameLoop() {
         if (gameEnded) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
+        // תנועה רציפה של השחקן
+        const player = document.getElementById("player");
+        const step = 5;
+        let top = player.offsetTop;
+        let left = player.offsetLeft;
+
+        if (keysPressed["ArrowLeft"] && left - step >= 0) left -= step;
+        if (keysPressed["ArrowRight"] && left + step + player.offsetWidth <= canvas.width) left += step;
+        if (keysPressed["ArrowUp"] && top - step >= canvas.height * 0.6) top -= step;
+        if (keysPressed["ArrowDown"] && top + step + player.offsetHeight <= canvas.height) top += step;
+
+        player.style.left = `${left}px`;
+        player.style.top = `${top}px`;
+
         drawEnemies();
         updateEnemies();
 
@@ -529,8 +512,6 @@ function login() {
         }
     }
 
-    
-    
 
     function updatePlayerBullets() {
         playerBullets.forEach(bullet => bullet.y -= playerBulletSpeed);
@@ -569,26 +550,6 @@ function login() {
         }
     }
 
-    
-
-
-    // document.addEventListener("keydown", (event) => {
-    //     if (!selectedFireKey) return;
-    
-    //     const keyPressed = event.key === " " || event.code === "Space" ? " " : event.key.toUpperCase();
-    
-    //     if (keyPressed === selectedFireKey && playerBullets.length < 3) {
-    //         const player = document.getElementById("player");
-    //         const bullet = {
-    //             x: player.offsetLeft + player.offsetWidth / 2 - 2,
-    //             y: player.offsetTop,
-    //             width: 4,
-    //             height: 10
-    //         };
-    //         playerBullets.push(bullet);
-    //     }
-    // });
-
     function updateTimerDisplay() {
         const minutes = Math.floor(timeRemaining / 60);
         const seconds = timeRemaining % 60;
@@ -605,14 +566,16 @@ function login() {
         if (keysToPrevent.includes(event.key)) {
             event.preventDefault();
         }
+
+        keysPressed[event.key] = true;
     
-        // ✨ סגירת about
+        //  סגירת about
         if (event.key === "Escape") {
             closeAbout();
             return;
         }
     
-        // ✨ אם נלחץ input של fire-key – נעדכן את הערך בו (למעלה)
+        //  אם נלחץ input של fire-key – נעדכן את הערך בו (למעלה)
         const fireInput = document.getElementById("fire-key");
         if (document.activeElement === fireInput) {
             event.preventDefault();
@@ -620,7 +583,7 @@ function login() {
             return;
         }
     
-        // ✨ תזוזת החללית
+        //  תזוזת החללית
         const player = document.getElementById("player");
         const canvas = document.getElementById("gameCanvas");
         if (!player || !canvas) return;
@@ -647,35 +610,87 @@ function login() {
         player.style.left = `${left}px`;
         player.style.top = `${top}px`;
     
-        // ✨ ירי (רק אם יש fire key)
+        // ירי (רק אם יש fire key)
         const keyPressed = event.key === " " || event.code === "Space" ? " " : event.key.toUpperCase();
-        if (selectedFireKey && keyPressed === selectedFireKey && playerBullets.length < 3) {
-            const bullet = {
-                x: player.offsetLeft + player.offsetWidth / 2 - 2,
-                y: player.offsetTop,
-                width: 4,
-                height: 10
-            };
-            playerBullets.push(bullet);
+        if (selectedFireKey && keyPressed === selectedFireKey && !fireInterval) {
+            fireBullet(); // ירי מיידי
+            fireInterval = setInterval(() => {
+                fireBullet();
+            }, 250);
+        }
+    });
+
+    function fireBullet() {
+        const player = document.getElementById("player");
+        if (playerBullets.length >= 3) return;
     
-            const shootSound = document.getElementById("shoot-sound");
-            if (shootSound) {
-                shootSound.currentTime = 0;
-                shootSound.play();
-            }
+        const bullet = {
+            x: player.offsetLeft + player.offsetWidth / 2 - 2,
+            y: player.offsetTop,
+            width: 4,
+            height: 10
+        };
+        playerBullets.push(bullet);
+    
+        const shootSound = document.getElementById("shoot-sound");
+        if (shootSound) {
+            shootSound.currentTime = 0;
+            shootSound.play();
+        }
+    }
+    
+
+    document.addEventListener("keyup", (event) => {
+        delete keysPressed[event.key];
+        const keyReleased = event.key === " " || event.code === "Space" ? " " : event.key.toUpperCase();
+        if (keyReleased === selectedFireKey && fireInterval) {
+            clearInterval(fireInterval);
+            fireInterval = null;
         }
     });
     
+    function showScoreHistory(username) {
+        const history = getScoreHistory(username);
+        const table = document.createElement("table");
+        table.style.marginTop = "20px";
+        table.style.color = "white";
+        table.style.width = "100%";
+        table.innerHTML = `
+            <tr><th>Rank</th><th>Score</th></tr>
+            ${history.map((s, i) => `
+                <tr ${s === score ? 'style="font-weight:bold;background:#444"' : ""}>
+                    <td>${i + 1}</td><td>${s}</td>
+                </tr>
+            `).join("")}
+        `;
+        const messageBox = document.getElementById("end-message");
+        messageBox.appendChild(table);
+    }
+
+    function startNewGame() {
+        
+    }
+    
+
+    function getScoreHistory(username) {
+        const raw = localStorage.getItem(`scoreHistory_${username}`);
+        if (!raw) return [];
+        try {
+            return JSON.parse(raw);
+        } catch (e) {
+            return [];
+        }
+    }
+    
+    function saveScoreToHistory(username, score) {
+        if (!username) return;
+        const history = getScoreHistory(username);
+        history.push(score);
+        history.sort((a, b) => b - a); // מיון יורד
+        localStorage.setItem(`scoreHistory_${username}`, JSON.stringify(history));
+    }
     
 
 
     
-
-
-
-
     
-    
-    
-
-
