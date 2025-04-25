@@ -88,11 +88,21 @@
   </div>
 
 
-  <dialog id="aboutDialog" class="about-dialog">
+  <dialog id="aboutDialog" class="about-dialog" dir="rtl">
     <button class="close-btn" onclick="closeAbout()">❌</button>
     <h2>About</h2>
-    <p>This is a spaceship game created as part of the web development course.</p>
-    <p>Created by Noa Ioshpe & Noa Revivo.</p>
+    <h1>תרגיל 2 - קורס סביבות פיתוח באינטרנט</h1>
+    <p><strong>מגישות:</strong> נעה ישפה 318773876, נועה רביבו 314940453</p>
+    <p>לא נעשה שימוש בTemplate ולא השתמשנו בjQuery</p>
+    <h2>הוראות:</h2>
+    <ul>
+        <li>השתמש בחיצים כדי להזיז את החללית הטובה</li>
+        <li>השתמש במקש שבחרת כדי לירות</li>
+        <li>הימנע מפגיעה של כדורי האויב בחללית שלך</li>
+        <li>השמד את כל החלליות הרעות כדי לנצח</li>
+    </ul>
+    <h2>קשיים בפיתוח:</h2>
+    <p>עמידה בכל כללי המשחק וסנכרון בין הפעולות של החלליות השונות בשילוב עם הצלילים המתאימים.</p>
   </dialog>
 
  <!-- Configuration Screen -->
@@ -100,13 +110,11 @@
     <div class="config-box">
       <h2>Configuration</h2>
   
-      <!-- בחירת מקש ירי -->
       <label for="fire-key">Choose Fire Key:</label>
       <select id="fire-key">
-        <!-- יתמלא באופן דינמי מה-JavaScript -->
       </select>
 
-      <!-- בחירת זמן משחק -->
+      <!-- time -->
       <label for="game-duration">Game Duration (minutes):</label>
       <select id="game-duration">
         <option value="2">2</option>
@@ -120,7 +128,7 @@
         <option value="10">10</option>
       </select>
   
-      <!-- בחירת צבעים -->
+      <!-- color -->
       <label for="theme-select">Choose Theme:</label>
       <select id="theme-select">
         <option value="blue">Blue</option>
@@ -128,7 +136,7 @@
         <option value="purple">Purple</option>
       </select>
   
-      <!-- כפתורים -->
+      <!-- buttons -->
       <button onclick="startGame()">Start Game</button>
       <button onclick="showScreen('welcome')">Back</button>
     </div>
