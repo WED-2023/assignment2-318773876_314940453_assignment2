@@ -9,6 +9,16 @@
     <div class="shooting-star"></div>
     <div class="shooting-star delay-1"></div>
     <div class="shooting-star delay-2"></div>
+
+  <!-- תפריט ניווט -->
+  <nav class="navbar">
+    <div class="navbar-links">
+        <button onclick="showScreen('welcome')">Welcome</button>
+        <button onclick="showScreen('login')">Log In</button>
+        <button onclick="showScreen('register')">Sign Up</button>
+        <button onclick="openAbout()">About</button>
+    </div>
+  </nav>
     
   <!-- Welcome -->
   <div id="welcome" class="screen active">
@@ -175,7 +185,10 @@
     <p>Contact us: <a href="mailto:noa@gmail.com">noa@gmail.com</a></p>
 </footer>
 
-<div id="end-message"></div>
+<div id="end-message">
+  <button class="close-btn-end" onclick="closeEndMessage()">❌</button>
+  <div id="end-message-content"></div>
+</div>
   
 <script src="script.js"></script>
 </body>

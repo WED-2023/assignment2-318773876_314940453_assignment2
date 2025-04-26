@@ -290,15 +290,18 @@ function login() {
         } else {
             message = "Game Over!";
         }
-    
-        messageBox.innerHTML = `<p style="font-size: 24px; color: white;">${message}</p>`;
+
+        const messageContent = document.getElementById("end-message-content");
+        messageContent.innerHTML = `<p style="font-size: 24px; color: white;">${message}</p>`;
+
         messageBox.style.display = "block";
-    
         
+        const closeButton = document.querySelector(".close-btn-end");
+        closeButton.style.display = "block";
+
         const currentUser = localStorage.getItem("currentUser");
         saveScoreToHistory(currentUser, score);
         showScoreHistory(currentUser);
-               
     }
 
     const canvas = document.getElementById("gameCanvas");
@@ -674,3 +677,8 @@ function login() {
         clearInterval(timerInterval);  
         gameEnded = true;  
     }
+
+function closeEndMessage() {
+    const endMessageBox = document.getElementById("end-message");
+    endMessageBox.style.display = "none";
+}
